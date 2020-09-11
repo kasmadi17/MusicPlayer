@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
 import android.net.wifi.WifiManager
@@ -15,14 +16,12 @@ import com.android.player.BuildConfig
 import com.android.player.model.ASong
 import com.android.player.service.PlayerService
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.C.CONTENT_TYPE_MUSIC
 import com.google.android.exoplayer2.C.USAGE_MEDIA
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -37,7 +36,7 @@ import com.google.android.exoplayer2.util.Util
 class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
 
 
-    private val BANDWIDTH_METER = DefaultBandwidthMeter()
+    private val BANDWIDTH_METER = DefaultBandwidthMeter.Builder(context)
 
     // The volume we set the media player to when we lose audio focus, but are
     // allowed to reduce the volume instead of stopping playback.
@@ -214,7 +213,7 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
             // then the content type should be set to CONTENT_TYPE_SPEECH for those
             // tracks.
             val audioAttributes = AudioAttributes.Builder()
-                .setContentType(CONTENT_TYPE_MUSIC)
+                .setContentType(C.CONTENT_TYPE_MUSIC)
                 .setUsage(USAGE_MEDIA)
                 .build()
             mExoPlayer?.audioAttributes = audioAttributes
@@ -253,10 +252,9 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
     private fun buildDataSourceFactory(context: Context): DataSource.Factory {
         val dataSourceFactory = DefaultDataSourceFactory(
             context,
-            Util.getUserAgent(context, BuildConfig.APPLICATION_ID),
-            BANDWIDTH_METER
+            Util.getUserAgent(context, BuildConfig.LIBRARY_PACKAGE_NAME)
         )
-        return DefaultDataSourceFactory(context, BANDWIDTH_METER, dataSourceFactory)
+        return DefaultDataSourceFactory(context, dataSourceFactory)
     }
 
     override fun pause() {
@@ -281,13 +279,31 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
         return mCurrentSong
     }
 
+
     private fun tryToGetAudioFocus() {
         Log.d(TAG, "tryToGetAudioFocus")
-        val result = mAudioManager?.requestAudioFocus(
-            mOnAudioFocusChangeListener,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN
-        )
+        mAudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        val result = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mAudioManager?.requestAudioFocus(
+                AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+                    setAudioAttributes(android.media.AudioAttributes.Builder().run {
+                        setUsage(android.media.AudioAttributes.USAGE_GAME)
+                        setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
+                        build()
+                    })
+                    setAcceptsDelayedFocusGain(true)
+                    setOnAudioFocusChangeListener(mOnAudioFocusChangeListener)
+                    build()
+                }
+            )
+        } else {
+            mAudioManager?.requestAudioFocus(
+                mOnAudioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
         mCurrentAudioFocusState = if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             AUDIO_FOCUSED
         } else {
@@ -297,7 +313,23 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
 
     private fun giveUpAudioFocus() {
         Log.d(TAG, "giveUpAudioFocus")
-        if (mAudioManager?.abandonAudioFocus(mOnAudioFocusChangeListener) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+        val result = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mAudioManager?.abandonAudioFocusRequest(
+                AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+                    setAudioAttributes(android.media.AudioAttributes.Builder().run {
+                        setUsage(android.media.AudioAttributes.USAGE_GAME)
+                        setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
+                        build()
+                    })
+                    setAcceptsDelayedFocusGain(true)
+                    setOnAudioFocusChangeListener(mOnAudioFocusChangeListener)
+                    build()
+                }
+            )
+        } else {
+            mAudioManager?.abandonAudioFocus(mOnAudioFocusChangeListener)
+        }
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
         }
     }

@@ -30,6 +30,7 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerActionCallback,
 
     private val mHandler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
+
             when (msg.what) {
                 ACTION_PLAY_SONG_IN_LIST -> {
                     if (mSongList.isNullOrEmpty()) mSong?.let { mService?.play(it) }
