@@ -10,12 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="782b9082-73b6-4021-8074-8d5c40168852" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player/src/main/java/com/android/player/controller/MediaController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/player/src/main/java/com/android/player/controller/MediaController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player/src/main/java/com/android/player/exo/ExoPlayerManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/player/src/main/java/com/android/player/exo/ExoPlayerManager.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599820414400</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="- migrate deprecate api">
+      <created>1599821282058</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1599821282058</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -204,7 +206,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="### changelog&#10;- add BaseSongFragment.kt&#10;- migrate deprecate api&#10;- update gradle &#10;- update lib" />
-    <option name="LAST_COMMIT_MESSAGE" value="### changelog&#10;- add BaseSongFragment.kt&#10;- migrate deprecate api&#10;- update gradle &#10;- update lib" />
+    <MESSAGE value="- migrate deprecate api" />
+    <option name="LAST_COMMIT_MESSAGE" value="- migrate deprecate api" />
   </component>
   <component name="WindowStateProjectService">
     <state x="473" y="149" key="#com.intellij.ide.util.MemberChooser" timestamp="1599820151740">
@@ -215,10 +218,10 @@
       <screen x="0" y="23" width="1440" height="808" />
     </state>
     <state x="459" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.1440.808@0.23.1440.808" timestamp="1599820074415" />
-    <state x="265" y="23" key="CommitChangelistDialog2" timestamp="1599820413300">
+    <state x="265" y="23" key="CommitChangelistDialog2" timestamp="1599821281764">
       <screen x="0" y="23" width="1440" height="808" />
     </state>
-    <state x="265" y="23" key="CommitChangelistDialog2/0.23.1440.808@0.23.1440.808" timestamp="1599820413300" />
+    <state x="265" y="23" key="CommitChangelistDialog2/0.23.1440.808@0.23.1440.808" timestamp="1599821281764" />
     <state width="1398" height="180" key="GridCell.Tab.0.bottom" timestamp="1599820983365">
       <screen x="0" y="23" width="1440" height="808" />
     </state>
@@ -235,10 +238,10 @@
       <screen x="0" y="23" width="1440" height="808" />
     </state>
     <state width="1398" height="180" key="GridCell.Tab.0.right/0.23.1440.808@0.23.1440.808" timestamp="1599820983365" />
-    <state x="320" y="162" key="Vcs.Push.Dialog.v2" timestamp="1599820452286">
+    <state x="320" y="162" key="Vcs.Push.Dialog.v2" timestamp="1599821387892">
       <screen x="0" y="23" width="1440" height="808" />
     </state>
-    <state x="320" y="162" key="Vcs.Push.Dialog.v2/0.23.1440.808@0.23.1440.808" timestamp="1599820452286" />
+    <state x="320" y="162" key="Vcs.Push.Dialog.v2/0.23.1440.808@0.23.1440.808" timestamp="1599821387892" />
     <state x="385" y="155" width="670" height="676" key="search.everywhere.popup" timestamp="1599820979018">
       <screen x="0" y="23" width="1440" height="808" />
     </state>
