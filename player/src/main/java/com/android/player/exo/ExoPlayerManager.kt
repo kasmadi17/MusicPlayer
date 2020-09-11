@@ -18,9 +18,8 @@ import com.android.player.service.PlayerService
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.C.USAGE_MEDIA
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -118,7 +117,7 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
         // Create the Wifi lock (this does not acquire the lock, this just creates it)
         this.mWifiLock =
             (context.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager)
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "app_lock")
+                .createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "app_lock")
     }
 
     private fun onUpdateProgress(position: Long, duration: Long) {
@@ -220,17 +219,11 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
 
             // Produces DataSource instances through which media data is loaded.
             val dataSourceFactory = buildDataSourceFactory(context)
-            // Produces Extractor instances for parsing the media data.
-            val extractorsFactory = DefaultExtractorsFactory()
-            // The MediaSource represents the media to be played.
-            val extractorMediaFactory = ExtractorMediaSource.Factory(dataSourceFactory)
-            extractorMediaFactory.setExtractorsFactory(extractorsFactory)
-            //MediaSource mediaSource = extractorMediaFactory.createMediaSource(Uri.parse(source));
 
             val mediaSource: MediaSource
             mediaSource = when (mCurrentSong?.songType) {
                 C.TYPE_OTHER ->
-                    ExtractorMediaSource.Factory(dataSourceFactory)
+                    ProgressiveMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(source))
                 else ->
                     HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(source))
@@ -304,6 +297,7 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
                 AudioManager.AUDIOFOCUS_GAIN
             )
         }
+        
         mCurrentAudioFocusState = if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             AUDIO_FOCUSED
         } else {

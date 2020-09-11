@@ -51,7 +51,7 @@ class MediaController(
         }
 
 
-        onExoPlayerManagerCallback.getCurrentSong()?.let { nonNullSong ->
+        onExoPlayerManagerCallback.getCurrentSong()?.let { _ ->
             Handler().postDelayed({
                 runOnSongChanged(onMediaControllerCallback)
                 runOnPlaybackStateChanged(
